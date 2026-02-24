@@ -27,37 +27,58 @@ st.set_page_config(
 st.markdown(
     """
     <style>
-    /* 전체 배경 */
-    .stApp { background: linear-gradient(135deg, #0f0c29, #302b63, #24243e); }
+    /* 전체 배경 - 밝은 그라데이션 */
+    .stApp { background: linear-gradient(135deg, #f0f4ff, #e8edf5, #f5f0ff); }
+
+    /* 전역 텍스트 색상 */
+    .stApp, .stApp p, .stApp span, .stApp label, .stApp div {
+        color: #1e1e2f;
+    }
+    .stApp h1, .stApp h2, .stApp h3 { color: #2c2c54; }
+
+    /* 탭 텍스트 */
+    .stTabs [data-baseweb="tab"] { color: #2c2c54; }
+    .stTabs [aria-selected="true"] { color: #4a3fbf; }
 
     /* KPI 카드 */
     .kpi-card {
-        background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.05));
-        border: 1px solid rgba(255,255,255,0.15);
+        background: linear-gradient(135deg, #ffffff, #f7f8fc);
+        border: 1px solid #d4d8e8;
         border-radius: 16px;
         padding: 24px 20px;
         text-align: center;
-        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0,0,0,0.06);
         transition: transform 0.2s;
     }
-    .kpi-card:hover { transform: translateY(-4px); }
-    .kpi-value { font-size: 2.4rem; font-weight: 800; color: #00d4ff; }
-    .kpi-label { font-size: 0.95rem; color: rgba(255,255,255,0.7); margin-top: 4px; }
+    .kpi-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
+    .kpi-value { font-size: 2.4rem; font-weight: 800; color: #4a3fbf; }
+    .kpi-label { font-size: 0.95rem; color: #555; margin-top: 4px; }
 
     /* 이벤트 카드 */
     .event-card {
-        background: rgba(255,255,255,0.06);
-        border-left: 4px solid #00d4ff;
+        background: #ffffff;
+        border-left: 4px solid #4a3fbf;
         border-radius: 12px;
         padding: 16px 20px;
         margin-bottom: 10px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        color: #1e1e2f;
     }
-    .event-card.past { border-left-color: #888; opacity: 0.65; }
-    .event-card.today { border-left-color: #ff6ec7; }
+    .event-card strong { color: #2c2c54; }
+    .event-card span { color: #555 !important; }
+    .event-card.past { border-left-color: #aaa; opacity: 0.7; }
+    .event-card.today { border-left-color: #e84393; }
 
     /* 사이드바 */
     section[data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #1a1a2e, #16213e);
+        background: linear-gradient(180deg, #f7f8fc, #eef0f7);
+    }
+    section[data-testid="stSidebar"] p,
+    section[data-testid="stSidebar"] span,
+    section[data-testid="stSidebar"] label,
+    section[data-testid="stSidebar"] div,
+    section[data-testid="stSidebar"] .stMarkdown {
+        color: #2c2c54;
     }
     </style>
     """,
@@ -110,14 +131,14 @@ nearest = responses[0] if responses else None
 
 col1, col2, col3, col4 = st.columns(4)
 with col1:
-    st.markdown(kpi_card("전체 이벤트", total, "#00d4ff"), unsafe_allow_html=True)
+    st.markdown(kpi_card("전체 이벤트", total, "#4a3fbf"), unsafe_allow_html=True)
 with col2:
-    st.markdown(kpi_card("다가오는 일정", upcoming, "#00e676"), unsafe_allow_html=True)
+    st.markdown(kpi_card("다가오는 일정", upcoming, "#2e8b57"), unsafe_allow_html=True)
 with col3:
-    st.markdown(kpi_card("지난 일정", past, "#ff9800"), unsafe_allow_html=True)
+    st.markdown(kpi_card("지난 일정", past, "#d35400"), unsafe_allow_html=True)
 with col4:
     nearest_label = nearest.d_day_label if nearest else "-"
-    st.markdown(kpi_card("가장 가까운 D-Day", nearest_label, "#ff6ec7"), unsafe_allow_html=True)
+    st.markdown(kpi_card("가장 가까운 D-Day", nearest_label, "#c0392b"), unsafe_allow_html=True)
 
 st.markdown("<br>", unsafe_allow_html=True)
 
@@ -140,10 +161,10 @@ else:
                 st.markdown(
                     f"""<div class="{card_class}">
                         <strong>{resp.title}</strong>
-                        &nbsp; <span style="color:#aaa">[{resp.category.value}]</span><br>
-                        📆 {resp.target_date.isoformat()} &nbsp;|&nbsp;
-                        <span style="font-weight:700; color:{'#ff6ec7' if resp.d_day <= 3 and resp.d_day >= 0 else '#00d4ff'}">{resp.d_day_label}</span>
-                        {f'<br>📝 {resp.memo}' if resp.memo else ''}
+                        &nbsp; <span style="color:#777">[{resp.category.value}]</span><br>
+                        <span style="color:#444">📆 {resp.target_date.isoformat()}</span> &nbsp;|&nbsp;
+                        <span style="font-weight:700; color:{'#c0392b' if resp.d_day <= 3 and resp.d_day >= 0 else '#4a3fbf'}">{resp.d_day_label}</span>
+                        {f'<br><span style="color:#555">📝 {resp.memo}</span>' if resp.memo else ''}
                     </div>""",
                     unsafe_allow_html=True,
                 )
@@ -173,10 +194,10 @@ else:
                 )
                 fig_donut.update_layout(
                     title="카테고리별 분포",
-                    template="plotly_dark",
+                    template="plotly_white",
                     paper_bgcolor="rgba(0,0,0,0)",
                     plot_bgcolor="rgba(0,0,0,0)",
-                    font=dict(color="white"),
+                    font=dict(color="#2c2c54"),
                     height=350,
                 )
                 st.plotly_chart(fig_donut, width="stretch")
@@ -191,7 +212,7 @@ else:
                             x=[r.title for r in future],
                             y=[r.d_day for r in future],
                             marker_color=[
-                                "#ff6ec7" if r.d_day <= 3 else "#00d4ff" for r in future
+                                "#c0392b" if r.d_day <= 3 else "#4a3fbf" for r in future
                             ],
                             text=[r.d_day_label for r in future],
                             textposition="auto",
@@ -202,10 +223,10 @@ else:
                     title="다가오는 일정 (남은 일수)",
                     xaxis_title="이벤트",
                     yaxis_title="남은 일수",
-                    template="plotly_dark",
+                    template="plotly_white",
                     paper_bgcolor="rgba(0,0,0,0)",
                     plot_bgcolor="rgba(0,0,0,0)",
-                    font=dict(color="white"),
+                    font=dict(color="#2c2c54"),
                     height=350,
                 )
                 st.plotly_chart(fig_bar, width="stretch")
@@ -216,7 +237,7 @@ else:
         if responses:
             fig_timeline = go.Figure()
             for r in responses:
-                color = "#ff6ec7" if r.d_day <= 3 and r.d_day >= 0 else ("#888" if r.d_day < 0 else "#00d4ff")
+                color = "#c0392b" if r.d_day <= 3 and r.d_day >= 0 else ("#aaa" if r.d_day < 0 else "#4a3fbf")
                 fig_timeline.add_trace(
                     go.Scatter(
                         x=[r.target_date],
@@ -236,21 +257,21 @@ else:
                 x1=datetime.date.today().isoformat(),
                 y0=0, y1=1,
                 yref="paper",
-                line=dict(dash="dash", color="#ff6ec7"),
+                line=dict(dash="dash", color="#c0392b"),
             )
             fig_timeline.add_annotation(
                 x=datetime.date.today().isoformat(),
                 y=1, yref="paper",
                 text="오늘",
                 showarrow=False,
-                font=dict(color="#ff6ec7"),
+                font=dict(color="#c0392b"),
             )
             fig_timeline.update_layout(
                 title="📅 이벤트 타임라인",
-                template="plotly_dark",
+                template="plotly_white",
                 paper_bgcolor="rgba(0,0,0,0)",
                 plot_bgcolor="rgba(0,0,0,0)",
-                font=dict(color="white"),
+                font=dict(color="#2c2c54"),
                 height=300,
                 xaxis_title="날짜",
             )
