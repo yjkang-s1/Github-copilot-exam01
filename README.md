@@ -155,7 +155,7 @@ uvicorn app.api:app --reload --port 8000
 streamlit run streamlit_app.py
 ```
 
-- **기본 주소**: http://localhost:8501
+- **기본 주소**: http://localhost:8502
 
 ### 2.6 테스트 실행
 
