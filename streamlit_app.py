@@ -84,7 +84,7 @@ with st.sidebar:
         target_date = st.date_input("목표 날짜", value=datetime.date.today() + datetime.timedelta(days=7))
         category = st.selectbox("카테고리", [c.value for c in EventCategory])
         memo = st.text_area("메모 (선택)", max_chars=200)
-        submitted = st.form_submit_button("등록", use_container_width=True)
+        submitted = st.form_submit_button("등록")
         if submitted and title:
             cat_enum = EventCategory(category)
             add_event(DdayEventCreate(title=title, target_date=target_date, category=cat_enum, memo=memo or None))
@@ -179,7 +179,7 @@ else:
                     font=dict(color="white"),
                     height=350,
                 )
-                st.plotly_chart(fig_donut, use_container_width=True)
+                st.plotly_chart(fig_donut, width="stretch")
 
         with chart_col2:
             # D-Day 바 차트 (미래 이벤트만)
@@ -208,7 +208,7 @@ else:
                     font=dict(color="white"),
                     height=350,
                 )
-                st.plotly_chart(fig_bar, use_container_width=True)
+                st.plotly_chart(fig_bar, width="stretch")
             else:
                 st.info("다가오는 일정이 없습니다.")
 
@@ -254,4 +254,4 @@ else:
                 height=300,
                 xaxis_title="날짜",
             )
-            st.plotly_chart(fig_timeline, use_container_width=True)
+            st.plotly_chart(fig_timeline, width="stretch")
